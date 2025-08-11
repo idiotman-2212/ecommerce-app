@@ -1,39 +1,25 @@
 package com.ecommerce.backend.ecommercebackend.entity;
 
 import com.ecommerce.backend.ecommercebackend.util.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Category extends BaseEntity {
-
-    @Column(unique = true, nullable = false, length = 255)
-    String name;
-
-    String description;
-
-    String imageUrl;
+public class ProductAttribute extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-            @JoinColumn(name = "parent_id")
-            Category parent;
+    @JoinColumn(name = "product_id")
+    Product product;
 
-    @OneToMany(mappedBy = "parent")
-    List<Category> children = new ArrayList<>();
+    String attributeName;
 
-    Boolean isActive = true;
 }
