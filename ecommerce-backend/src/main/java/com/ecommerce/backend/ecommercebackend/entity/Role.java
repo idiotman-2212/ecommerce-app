@@ -1,5 +1,6 @@
 package com.ecommerce.backend.ecommercebackend.entity;
 
+import com.ecommerce.backend.ecommercebackend.util.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,10 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class Role extends BaseEntity {
 
     @Column(unique = true, nullable = false, length = 50)
     String name;
