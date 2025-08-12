@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,33 +13,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "categories")
-public class Category extends BaseEntity {
-
-    @Column(nullable = false, length = 100)
-    String name;
-
-    @Column(columnDefinition = "TEXT")
-    String description;
-
-    @Column(name = "image_url", length = 255)
-    String imageUrl;
+@Table(name = "coupon_usage")
+public class CouponUsage extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    Category parent;
+    @JoinColumn(name = "coupon_id", nullable = false)
+    Coupon coupon;
 
-    @OneToMany(mappedBy = "parent")
-    List<Category> children = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 
-    @Column(name = "is_active")
-    Boolean isActive = true;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    Order order;
+
+    @Column(name = "discount_amount", nullable = false, precision = 10, scale = 2)
+    BigDecimal discountAmount;
+
 }

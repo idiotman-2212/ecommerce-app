@@ -3,10 +3,12 @@ package com.ecommerce.backend.ecommercebackend.entity;
 import com.ecommerce.backend.ecommercebackend.util.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,36 +23,43 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "products")
 public class Product extends BaseEntity {
 
-    @Column(unique = true, nullable = false, length = 255)
+    @Column(nullable = false, length = 255)
     String name;
 
+    @Column(columnDefinition = "TEXT")
     String description;
 
     @Column(nullable = false, precision = 10, scale = 2)
     BigDecimal price;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "sale_price", precision = 10, scale = 2)
     BigDecimal salePrice;
 
-    @Column(nullable = false, length = 255)
+    @Column(unique = true, length = 100)
     String sku;
 
+    @Column(name = "stock_quantity")
     Integer stockQuantity = 0;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(precision = 8, scale = 2)
     BigDecimal weight;
 
-    String dimension;
+    @Column(length = 100)
+    String dimensions;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     Category category;
 
+    @Column(name = "is_active")
     Boolean isActive = true;
 
-    Boolean is_featured = false;
+    @Column(name = "is_featured")
+    Boolean isFeatured = false;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductImage> images = new ArrayList<>();

@@ -13,22 +13,36 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "product_attributes")
-public class ProductAttribute extends BaseEntity {
+@Table(name = "order_items")
+public class OrderItem extends BaseEntity {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     Product product;
 
-    @Column(name = "attribute_name", nullable = false, length = 100)
-    String attributeName;
+    @Column(name = "product_name", nullable = false, length = 255)
+    String productName;
 
-    @Column(name = "attribute_value", nullable = false, columnDefinition = "TEXT")
-    String attributeValue;
+    @Column(name = "product_sku", length = 100)
+    String productSku;
 
+    @Column(nullable = false)
+    Integer quantity;
+
+    @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
+    BigDecimal unitPrice;
+
+    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    BigDecimal totalPrice;
 }
