@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,33 +13,36 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "categories")
-public class Category extends BaseEntity {
-
-    @Column(nullable = false, length = 100)
-    String name;
-
-    @Column(columnDefinition = "TEXT")
-    String description;
-
-    @Column(name = "image_url", length = 255)
-    String imageUrl;
+@Table(name = "reviews")
+public class Review extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    Category parent;
+    @JoinColumn(name = "product_id", nullable = false)
+    Product product;
 
-    @OneToMany(mappedBy = "parent")
-    List<Category> children = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 
-    @Column(name = "is_active")
-    Boolean isActive = true;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    Order order;
+
+    @Column(nullable = false)
+    Integer rating;
+
+    @Column(length = 255)
+    String title;
+
+    @Column(columnDefinition = "TEXT")
+    String comment;
+
+    @Column(name = "is_approved")
+    Boolean isApproved = false;
+
 }

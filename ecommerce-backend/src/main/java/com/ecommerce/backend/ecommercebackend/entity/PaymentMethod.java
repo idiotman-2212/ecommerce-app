@@ -3,10 +3,6 @@ package com.ecommerce.backend.ecommercebackend.entity;
 import com.ecommerce.backend.ecommercebackend.util.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,32 +10,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "categories")
-public class Category extends BaseEntity {
+@Table(name = "payment_methods")
+public class PaymentMethod extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     String name;
 
     @Column(columnDefinition = "TEXT")
     String description;
-
-    @Column(name = "image_url", length = 255)
-    String imageUrl;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    Category parent;
-
-    @OneToMany(mappedBy = "parent")
-    List<Category> children = new ArrayList<>();
 
     @Column(name = "is_active")
     Boolean isActive = true;
