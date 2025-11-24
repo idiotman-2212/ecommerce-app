@@ -1,6 +1,8 @@
 package com.ecommerce.backend.ecommercebackend.entity;
 
 import com.ecommerce.backend.ecommercebackend.util.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -23,5 +25,15 @@ public class Role extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     String description;
+
+    @JsonCreator
+    public Role(String name) {
+        this.name = name;
+    }
+
+    @JsonValue
+    public String toValue() {
+        return this.name;
+    }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Override
     public List<User> findAll() {
@@ -49,6 +51,12 @@ public class UserServiceImpl implements UserService {
         if(user.getRoles() == null || user.getRoles().isEmpty()) {
             Role userRole = roleService.getUserRole();
             user.setRoles(Set.of(userRole));
+        } else {
+            Set<Role> roles = user.getRoles().stream()
+                    .map(r -> roleRepository.findByName(r.getName())
+                            .orElseThrow(() -> new BadRequestException("Role not found: " + r.getName())))
+                    .collect(Collectors.toSet());
+            user.setRoles(roles);
         }
         userRepository.save(user);
         return user;
@@ -64,10 +72,16 @@ public class UserServiceImpl implements UserService {
         existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         if(user.getRoles() == null || user.getRoles().isEmpty()) {
             Role userRole = roleService.getUserRole();
-            user.setRoles(Set.of(userRole));
+            existingUser.setRoles(Set.of(userRole));
+        } else {
+            Set<Role> resolved = user.getRoles().stream()
+                    .map(r -> roleRepository.findByName(r.getName())
+                            .orElseThrow(() -> new BadRequestException("Role not found: " + r.getName())))
+                    .collect(Collectors.toSet());
+            existingUser.setRoles(resolved);
         }
         userRepository.save(existingUser);
-        return user;
+        return existingUser;
     }
 
     @Override
