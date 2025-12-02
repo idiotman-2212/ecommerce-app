@@ -23,6 +23,14 @@ Backend API hoàn chỉnh cho ứng dụng thương mại điện tử được 
 - Quản lý tồn kho
 - Sản phẩm nổi bật
 
+### 📂 Category Management
+- CRUD operations cho danh mục sản phẩm
+- Cấu trúc phân cấp (hierarchical categories)
+- Quản lý parent-child relationships
+- Validation chống circular reference
+- Category tree visualization
+- Toggle active/inactive status
+
 ### 🛒 Order Management
 - Tạo và quản lý đơn hàng
 - Trạng thái đơn hàng (PENDING → DELIVERED)
@@ -65,6 +73,7 @@ cd ecommerce-backend
 ### 2. Cấu hình database
 - Tạo database MySQL: `ecommerce_db`
 - Chạy script SQL: `database/ecommerce_db.sql`
+- (Tùy chọn) Chạy sample data: `database/category_sample_data.sql`
 
 ### 3. Cấu hình application.properties
 Chỉnh sửa file `src/main/resources/application.properties`:
@@ -122,62 +131,11 @@ Content-Type: application/json
 }
 ```
 
-#### Refresh Token
-```http
-POST /auth/refresh?refreshToken=your-refresh-token
-```
-
-### User Management Endpoints
-
-#### Lấy danh sách users (Admin only)
-```http
-GET /users?page=0&size=20&sortBy=id&sortDir=desc
-Authorization: Bearer your-jwt-token
-```
-
-#### Tạo user mới (Admin only)
-```http
-POST /users
-Authorization: Bearer your-jwt-token
-Content-Type: application/json
-
-{
-  "username": "newuser",
-  "email": "user@example.com",
-  "password": "password123",
-  "firstName": "New",
-  "lastName": "User",
-  "roles": ["USER"]
-}
-```
-
-#### Cập nhật user
-```http
-PUT /users/{id}
-Authorization: Bearer your-jwt-token
-Content-Type: application/json
-
-{
-  "firstName": "Updated",
-  "lastName": "Name"
-}
-```
-
 ### Product Endpoints
 
 #### Lấy danh sách sản phẩm
 ```http
 GET /products?page=0&size=20
-```
-
-#### Lấy sản phẩm theo ID
-```http
-GET /products/{id}
-```
-
-#### Tìm kiếm sản phẩm
-```http
-GET /products/search?keyword=iphone&page=0&size=20
 ```
 
 #### Tạo sản phẩm mới (Admin only)
@@ -198,6 +156,50 @@ Content-Type: application/json
   "model": "iPhone 15 Pro"
 }
 ```
+
+### Category Endpoints
+
+#### Lấy tất cả categories
+```http
+GET /categories
+```
+
+#### Lấy category tree (cấu trúc phân cấp)
+```http
+GET /categories/tree
+```
+
+#### Tạo category mới (Admin only)
+```http
+POST /categories
+Authorization: Bearer your-jwt-token
+Content-Type: application/json
+
+{
+  "name": "Laptop Gaming",
+  "description": "Máy tính xách tay chơi game",
+  "imageUrl": "https://example.com/gaming-laptop.jpg",
+  "parentId": 1,
+  "isActive": true
+}
+```
+
+#### Cập nhật category (Admin only)
+```http
+PUT /categories/{id}
+Authorization: Bearer your-jwt-token
+Content-Type: application/json
+
+{
+  "name": "Laptop Gaming Pro",
+  "description": "Máy tính xách tay chơi game cao cấp",
+  "isActive": true
+}
+```
+
+**📖 Chi tiết API:** 
+- Product API: Xem code trong `ProductController.java`
+- Category API: Xem [CATEGORY_API.md](CATEGORY_API.md) để biết thêm chi tiết
 
 ## 🔐 Security
 
@@ -222,7 +224,7 @@ Content-Type: application/json
 - `users` - Người dùng
 - `roles` - Vai trò
 - `products` - Sản phẩm
-- `categories` - Danh mục
+- `categories` - Danh mục (hỗ trợ cấu trúc phân cấp)
 - `orders` - Đơn hàng
 - `order_items` - Chi tiết đơn hàng
 - `shopping_cart` - Giỏ hàng
@@ -236,6 +238,9 @@ Content-Type: application/json
 ```bash
 mvn test
 ```
+
+### Test Category API
+Xem [CATEGORY_TESTS.md](CATEGORY_TESTS.md) để biết chi tiết test cases cho Category feature.
 
 ### Test với Postman
 Import file collection vào Postman để test các API endpoints.
@@ -311,6 +316,12 @@ MIT License - xem file [LICENSE](LICENSE) để biết thêm chi tiết.
 
 ## 🔄 Changelog
 
+### v1.1.0 (2024-12-02)
+- ✅ Category Management với hierarchical structure
+- ✅ Category API với đầy đủ CRUD operations
+- ✅ Validation cho circular reference
+- ✅ Category tree visualization
+
 ### v1.0.0 (2024-01-01)
 - ✅ JWT Authentication
 - ✅ User Management
@@ -326,5 +337,3 @@ MIT License - xem file [LICENSE](LICENSE) để biết thêm chi tiết.
 ---
 
 **Backend API đã sẵn sàng để tích hợp với frontend!** 🎉
-
-
